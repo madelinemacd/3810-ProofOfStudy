@@ -31,9 +31,9 @@ namespace SetAssociativeCache
 
         public Address(int address)
         {
-            tag = address / 64;
-            row = (address / 16) % 4;
-            offset = address % 16;
+            tag = address / 32;
+            row = (address / 4) % 8;
+            offset = address % 4;
             value = address;
         }
     }
