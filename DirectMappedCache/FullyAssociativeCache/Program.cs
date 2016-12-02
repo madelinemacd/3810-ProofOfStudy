@@ -88,7 +88,7 @@ namespace FullyAssociativeCache
 
             for (int i = 0; i < addresses.Length; i++)
             {
-                performLookup(fullyAssociativeCache, addresses[i], ref misses, ref LRUCount);
+                performLookup(fullyAssociativeCache, addresses[i], ref misses, i);
             }
             Console.WriteLine("\n\t\tStarting Second Loop\n");
             for (int numLoops = 6; numLoops > 0; numLoops--)
@@ -96,7 +96,7 @@ namespace FullyAssociativeCache
                 misses = 0;
                 for (int i = 0; i < addresses.Length; i++)
                 {
-                    totalCycles += performLookup(fullyAssociativeCache, addresses[i], ref misses, ref LRUCount);
+                    totalCycles += performLookup(fullyAssociativeCache, addresses[i], ref misses, i);
                     totalLookups++;
                 }
             }
@@ -107,7 +107,7 @@ namespace FullyAssociativeCache
             Console.ReadLine();
         }
 
-        private static int performLookup(CacheRow[] fullyAssociativeCache, Address currAdd, ref int misses, ref int LRUCount)
+        private static int performLookup(CacheRow[] fullyAssociativeCache, Address currAdd, ref int misses, int sequenceNum)
         {
             Console.Write("Accessing {0}(tag {1}):", currAdd.value, currAdd.tag);
             for (int i = 0; i < fullyAssociativeCache.Length;i++)
@@ -115,7 +115,7 @@ namespace FullyAssociativeCache
                 CacheRow row = fullyAssociativeCache[i];
                 if (currAdd.tag == row.tag && row.vBit)
                 {
-                    row.LRUVal = LRUCount++;
+                    row.LRUVal = sequenceNum;
                     Console.WriteLine("hit from row {0}", i);
                     return 1;
                 }
@@ -143,7 +143,7 @@ namespace FullyAssociativeCache
             misses++;
             fullyAssociativeCache[lowestLRUPosition].vBit = true;
             fullyAssociativeCache[lowestLRUPosition].tag = currAdd.tag;
-            fullyAssociativeCache[lowestLRUPosition].LRUVal = LRUCount++;
+            fullyAssociativeCache[lowestLRUPosition].LRUVal = sequenceNum;
             return 42;
         }
 
