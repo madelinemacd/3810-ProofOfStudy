@@ -6,6 +6,14 @@ using System.Threading.Tasks;
 
 namespace FullyAssociativeCache
 {
+
+    //TODO:
+    //Analyze how my fully associative and set associative cache work by stepping through them by hand
+    //identify issues with frequent replacements
+    //Experiment and optimize, collect data
+    //write up optimization results
+    //clean up all code
+    //export as pdf, submit
     class Program
     {
         static void Main(string[] args)
@@ -16,82 +24,84 @@ namespace FullyAssociativeCache
                 fullyAssociativeCache[i] = new CacheRow();
             }
 
-            Address[] addresses = new Address[27];
-            addresses[0] = new Address(4);
-            addresses[1] = new Address(8);
-            addresses[2] = new Address(20);
-            addresses[3] = new Address(24);
-            addresses[4] = new Address(28);
-            addresses[5] = new Address(36);
-            addresses[6] = new Address(44);
-            addresses[7] = new Address(20);
-            addresses[8] = new Address(24);
-            addresses[9] = new Address(28);
-            addresses[10] = new Address(36);
-            addresses[11] = new Address(40);
-            addresses[12] = new Address(44);
-            addresses[13] = new Address(68);
-            addresses[14] = new Address(72);
-            addresses[15] = new Address(92);
-            addresses[16] = new Address(96);
-            addresses[17] = new Address(100);
-            addresses[18] = new Address(104);
-            addresses[19] = new Address(108);
-            addresses[20] = new Address(112);
-            addresses[21] = new Address(100);
-            addresses[22] = new Address(112);
-            addresses[23] = new Address(116);
-            addresses[24] = new Address(120);
-            addresses[25] = new Address(128);
-            addresses[26] = new Address(140);
+            #region declaring address arrays
+            Address[] ProofOfStudyAdresses = new Address[27];
+            ProofOfStudyAdresses[0] = new Address(4);
+            ProofOfStudyAdresses[1] = new Address(8);
+            ProofOfStudyAdresses[2] = new Address(20);
+            ProofOfStudyAdresses[3] = new Address(24);
+            ProofOfStudyAdresses[4] = new Address(28);
+            ProofOfStudyAdresses[5] = new Address(36);
+            ProofOfStudyAdresses[6] = new Address(44);
+            ProofOfStudyAdresses[7] = new Address(20);
+            ProofOfStudyAdresses[8] = new Address(24);
+            ProofOfStudyAdresses[9] = new Address(28);
+            ProofOfStudyAdresses[10] = new Address(36);
+            ProofOfStudyAdresses[11] = new Address(40);
+            ProofOfStudyAdresses[12] = new Address(44);
+            ProofOfStudyAdresses[13] = new Address(68);
+            ProofOfStudyAdresses[14] = new Address(72);
+            ProofOfStudyAdresses[15] = new Address(92);
+            ProofOfStudyAdresses[16] = new Address(96);
+            ProofOfStudyAdresses[17] = new Address(100);
+            ProofOfStudyAdresses[18] = new Address(104);
+            ProofOfStudyAdresses[19] = new Address(108);
+            ProofOfStudyAdresses[20] = new Address(112);
+            ProofOfStudyAdresses[21] = new Address(100);
+            ProofOfStudyAdresses[22] = new Address(112);
+            ProofOfStudyAdresses[23] = new Address(116);
+            ProofOfStudyAdresses[24] = new Address(120);
+            ProofOfStudyAdresses[25] = new Address(128);
+            ProofOfStudyAdresses[26] = new Address(140);
 
             //76 92 96 100 104 108 112 120 124 128 144 148
 
-            //Address[] addresses = new Address[28];
-            //addresses[0] = new Address(16);
-            //addresses[1] = new Address(20);
-            //addresses[2] = new Address(24);
-            //addresses[3] = new Address(28);
-            //addresses[4] = new Address(32);
-            //addresses[5] = new Address(36);
-            //addresses[6] = new Address(60);
-            //addresses[7] = new Address(64);
-            //addresses[8] = new Address(56);
-            //addresses[9] = new Address(60);
-            //addresses[10] = new Address(64);
-            //addresses[11] = new Address(68);
-            //addresses[12] = new Address(56);
-            //addresses[13] = new Address(60);
-            //addresses[14] = new Address(64);
-            //addresses[15] = new Address(72);
-            //addresses[16] = new Address(76);
-            //addresses[17] = new Address(92);
-            //addresses[18] = new Address(96);
-            //addresses[19] = new Address(100);
-            //addresses[20] = new Address(104);
-            //addresses[21] = new Address(108);
-            //addresses[22] = new Address(112);
-            //addresses[23] = new Address(120);
-            //addresses[24] = new Address(124);
-            //addresses[25] = new Address(128);
-            //addresses[26] = new Address(144);
-            //addresses[27] = new Address(148);
+            Address[] ExampleAddresses = new Address[28];
+            ExampleAddresses[0] = new Address(16);
+            ExampleAddresses[1] = new Address(20);
+            ExampleAddresses[2] = new Address(24);
+            ExampleAddresses[3] = new Address(28);
+            ExampleAddresses[4] = new Address(32);
+            ExampleAddresses[5] = new Address(36);
+            ExampleAddresses[6] = new Address(60);
+            ExampleAddresses[7] = new Address(64);
+            ExampleAddresses[8] = new Address(56);
+            ExampleAddresses[9] = new Address(60);
+            ExampleAddresses[10] = new Address(64);
+            ExampleAddresses[11] = new Address(68);
+            ExampleAddresses[12] = new Address(56);
+            ExampleAddresses[13] = new Address(60);
+            ExampleAddresses[14] = new Address(64);
+            ExampleAddresses[15] = new Address(72);
+            ExampleAddresses[16] = new Address(76);
+            ExampleAddresses[17] = new Address(92);
+            ExampleAddresses[18] = new Address(96);
+            ExampleAddresses[19] = new Address(100);
+            ExampleAddresses[20] = new Address(104);
+            ExampleAddresses[21] = new Address(108);
+            ExampleAddresses[22] = new Address(112);
+            ExampleAddresses[23] = new Address(120);
+            ExampleAddresses[24] = new Address(124);
+            ExampleAddresses[25] = new Address(128);
+            ExampleAddresses[26] = new Address(144);
+            ExampleAddresses[27] = new Address(148);
 
-            //make an array of addresses
-            //iterate through the addresses
-            //have a method called perform search, have it add up the number of cycles
+            #endregion
+
+            Address[] addresses = ExampleAddresses;
 
             int totalCycles = 0;
             int totalLookups = 0;
             int misses = 0;
-            int LRUCount = 0;
 
+            //do the first loop so we don't get those numbers included in analysis
             for (int i = 0; i < addresses.Length; i++)
             {
                 performLookup(fullyAssociativeCache, addresses[i], ref misses, i);
             }
             Console.WriteLine("\n\t\tStarting Second Loop\n");
-            for (int numLoops = 6; numLoops > 0; numLoops--)
+
+            for (int numLoops = 10; numLoops > 0; numLoops--)
             {
                 misses = 0;
                 for (int i = 0; i < addresses.Length; i++)
@@ -109,42 +119,36 @@ namespace FullyAssociativeCache
 
         private static int performLookup(CacheRow[] fullyAssociativeCache, Address currAdd, ref int misses, int sequenceNum)
         {
-            Console.Write("Accessing {0}(tag {1}):", currAdd.value, currAdd.tag);
-            for (int i = 0; i < fullyAssociativeCache.Length;i++)
+            //Console.Write("Accessing {0}(tag {1}):", currAdd.value, currAdd.tag);
+            for (int i = 0; i < fullyAssociativeCache.Length; i++)
             {
                 CacheRow row = fullyAssociativeCache[i];
                 if (currAdd.tag == row.tag && row.vBit)
                 {
                     row.LRUVal = sequenceNum;
-                    Console.WriteLine("hit from row {0}", i);
+                    //Console.WriteLine("hit from row {0}", i);
                     return 1;
                 }
             }
             //now find the LRU
-            Console.Write("miss");
+            //Console.Write("miss");
             int lowestLRUPosition = 1;
             int lowestLRUSoFar = int.MaxValue;
             for (int i = 0; i < fullyAssociativeCache.Length; i++)
             {
                 CacheRow row = fullyAssociativeCache[i];
-                if (!row.vBit)
-                {
-                    Console.Write(" - found invalid row");
-                    lowestLRUPosition = i;
-                    break;
-                }
                 if (row.LRUVal < lowestLRUSoFar)
                 {
                     lowestLRUSoFar = row.LRUVal;
                     lowestLRUPosition = i;
                 }
             }
-            Console.WriteLine(" - cached to row {0}", lowestLRUPosition);
+            //Console.WriteLine(" - cached to row {0}", lowestLRUPosition);
             misses++;
             fullyAssociativeCache[lowestLRUPosition].vBit = true;
             fullyAssociativeCache[lowestLRUPosition].tag = currAdd.tag;
             fullyAssociativeCache[lowestLRUPosition].LRUVal = sequenceNum;
-            return 42;
+            return 28;
         }
 
         private static void outputCache(CacheRow[] fullyAssociativeCache)
@@ -158,4 +162,28 @@ namespace FullyAssociativeCache
             }
         }
     }
+    class CacheRow
+    {
+        public int tag;
+        public bool vBit;
+        public int LRUVal;
+        public CacheRow()
+        {
+            vBit = false;
+            tag = 0;
+            LRUVal = -1;
+        }
+    }
+    class Address
+        {
+            public int tag;
+            public int offset;
+            public int value;
+            public Address(int address)
+            {
+                tag = address / 8;
+                offset = address % 8;
+                value = address;
+            }
+        }
 }
