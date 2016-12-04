@@ -6,24 +6,18 @@ using System.Threading.Tasks;
 
 namespace FullyAssociativeCache
 {
-
-    //TODO:
-    //Analyze how my fully associative and set associative cache work by stepping through them by hand
-    //identify issues with frequent replacements
-    //Experiment and optimize, collect data
-    //write up optimization results
-    //clean up all code
-    //export as pdf, submit
     class Program
     {
         static void Main(string[] args)
         {
+            //initialize cache
             CacheRow[] fullyAssociativeCache = new CacheRow[8];
             for (int i = 0; i < fullyAssociativeCache.Length; i++)
             {
                 fullyAssociativeCache[i] = new CacheRow();
             }
 
+            //ommitted because it's a repeat of the code from the direct mapped cache
             #region declaring address arrays
             Address[] ProofOfStudyAdresses = new Address[27];
             ProofOfStudyAdresses[0] = new Address(4);
@@ -99,8 +93,8 @@ namespace FullyAssociativeCache
             {
                 performLookup(fullyAssociativeCache, addresses[i], ref misses, i);
             }
-            Console.WriteLine("\n\t\tStarting Second Loop\n");
 
+            //perform lookups
             for (int numLoops = 10; numLoops > 0; numLoops--)
             {
                 misses = 0;
@@ -110,28 +104,22 @@ namespace FullyAssociativeCache
                     totalLookups++;
                 }
             }
-            Console.WriteLine("Misses: {0} \nHits: {1} \nInstructions: {2}", misses, addresses.Length - misses, addresses.Length);
-            Console.WriteLine("Total Cycles: {0} \n Total Instructions: {1}", totalCycles, totalLookups);
-            Console.WriteLine("Cycles per lookup = " + (double)(totalCycles) / (double)(totalLookups));
-            outputCache(fullyAssociativeCache);
             Console.ReadLine();
         }
 
         private static int performLookup(CacheRow[] fullyAssociativeCache, Address currAdd, ref int misses, int sequenceNum)
         {
-            //Console.Write("Accessing {0}(tag {1}):", currAdd.value, currAdd.tag);
+            //look through all rows for a matching tag
             for (int i = 0; i < fullyAssociativeCache.Length; i++)
             {
                 CacheRow row = fullyAssociativeCache[i];
                 if (currAdd.tag == row.tag && row.vBit)
                 {
                     row.LRUVal = sequenceNum;
-                    //Console.WriteLine("hit from row {0}", i);
                     return 1;
                 }
             }
-            //now find the LRU
-            //Console.Write("miss");
+            //if there was a miss find the row with the lowest LRU
             int lowestLRUPosition = 1;
             int lowestLRUSoFar = int.MaxValue;
             for (int i = 0; i < fullyAssociativeCache.Length; i++)
@@ -143,25 +131,15 @@ namespace FullyAssociativeCache
                     lowestLRUPosition = i;
                 }
             }
-            //Console.WriteLine(" - cached to row {0}", lowestLRUPosition);
+            //Load new info into the row with the lowest LRU
             misses++;
             fullyAssociativeCache[lowestLRUPosition].vBit = true;
             fullyAssociativeCache[lowestLRUPosition].tag = currAdd.tag;
             fullyAssociativeCache[lowestLRUPosition].LRUVal = sequenceNum;
             return 28;
         }
-
-        private static void outputCache(CacheRow[] fullyAssociativeCache)
-        {
-            Console.Write("Valid\tTag\tLRU");
-            for (int i = 0; i < fullyAssociativeCache.Length; i++)
-            {
-                Console.Write("\n" + (fullyAssociativeCache[i].vBit ? 1 : 0) + "\t"
-                    + fullyAssociativeCache[i].tag.ToString() + "\t"
-                    + fullyAssociativeCache[i].LRUVal);
-            }
-        }
     }
+    //stores information about a cache row
     class CacheRow
     {
         public int tag;
@@ -174,6 +152,7 @@ namespace FullyAssociativeCache
             LRUVal = -1;
         }
     }
+    //stores information about an address
     class Address
         {
             public int tag;

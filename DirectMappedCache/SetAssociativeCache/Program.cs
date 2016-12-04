@@ -10,42 +10,15 @@ namespace SetAssociativeCache
     {
         static void Main(string[] args)
         {
+            //initialize the cache
             SetAssociativeCacheRow[] setAssociativeCache = new SetAssociativeCacheRow[8];
             for (int i = 0; i < 8; i++)
             {
                 setAssociativeCache[i] = new SetAssociativeCacheRow();
             }
 
+            //ommitted because it's a repeat of code from the direct mapped cache
             #region address definitions
-            //Address[] addresses = new Address[27];
-            //addresses[0] = new Address(4);
-            //addresses[1] = new Address(8);
-            //addresses[2] = new Address(20);
-            //addresses[3] = new Address(24);
-            //addresses[4] = new Address(28);
-            //addresses[5] = new Address(36);
-            //addresses[6] = new Address(44);
-            //addresses[7] = new Address(20);
-            //addresses[8] = new Address(24);
-            //addresses[9] = new Address(28);
-            //addresses[10] = new Address(36);
-            //addresses[11] = new Address(40);
-            //addresses[12] = new Address(44);
-            //addresses[13] = new Address(68);
-            //addresses[14] = new Address(72);
-            //addresses[15] = new Address(92);
-            //addresses[16] = new Address(96);
-            //addresses[17] = new Address(100);
-            //addresses[18] = new Address(104);
-            //addresses[19] = new Address(108);
-            //addresses[20] = new Address(112);
-            //addresses[21] = new Address(100);
-            //addresses[22] = new Address(112);
-            //addresses[23] = new Address(116);
-            //addresses[24] = new Address(120);
-            //addresses[25] = new Address(128);
-            //addresses[26] = new Address(140);
-
 
             Address[] addresses = new Address[28];
             addresses[0] = new Address(16);
@@ -83,6 +56,7 @@ namespace SetAssociativeCache
             int totalLookups = 0;
             int misses = 0;
 
+            //perform lookups and collect data
             for (int i = 0; i < 27; i++)
             {
                 performLookup(setAssociativeCache, addresses[i], ref misses);
@@ -97,10 +71,7 @@ namespace SetAssociativeCache
                     totalLookups++;
                 }
             }
-            Console.WriteLine("Misses: {0} \nHits: {1} \nInstructions: {2}", misses, addresses.Length - misses, addresses.Length);
-            Console.WriteLine("Total Cycles: {0} \n Total Instructions: {1}", totalCycles, totalLookups);
-            Console.WriteLine("Cycles per lookup = " + (double)(totalCycles) / (double)(totalLookups));
-            //outputCache(setAssociativeCache);
+
             Console.ReadLine();
         }
         //first use direct mapped cache code to determine a row
@@ -108,9 +79,8 @@ namespace SetAssociativeCache
 
         private static int performLookup(SetAssociativeCacheRow[] setAssociativeCache, Address currAdd, ref int misses)
         {
-            //Console.Write("Accessing {0}(tag {1}):", currAdd.value, currAdd.tag);
+            //get the current row
             CacheDataBlock[] currRowElements = setAssociativeCache[currAdd.row].rowElements;
-            //have the row, not perform checks for validity
 
             //neither block is valid
             if (!currRowElements[0].vBit && !currRowElements[1].vBit)
@@ -146,7 +116,7 @@ namespace SetAssociativeCache
                 }
             }
             //both blocks are valid
-            else //both valid
+            else
             {
                 return twoValidBlocksInSet(currRowElements, currAdd.tag,ref misses);
             }
@@ -154,7 +124,7 @@ namespace SetAssociativeCache
 
         private static int twoValidBlocksInSet(CacheDataBlock[] currRowElements, int tag, ref int misses)
         {
-            //check both tags
+            //check both tags for if there was a hit
             if (currRowElements[0].tag == tag)
             {
                 currRowElements[0].LRUVal = 1;
@@ -167,6 +137,7 @@ namespace SetAssociativeCache
                 currRowElements[0].LRUVal = 0;
                 return 1;
             }
+            //if there wasn't a hit load memory into the appropriate block
             if (currRowElements[0].LRUVal == 1)
             {
                 return loadMemIntoBlock(currRowElements, false, tag, ref misses);
@@ -187,22 +158,9 @@ namespace SetAssociativeCache
             misses++;
             return 30;
         }
-
-        //private static void outputCache(SetAssociativeCacheRow[] directMappedCache)
-        //{
-        //    Console.Write("Valid\tTag\tData");
-        //    for (int i = 0; i < 4; i++)
-        //    {
-        //        Console.Write("\n" + (directMappedCache[i].vBit ? 1 : 0) + "\t"
-        //            + directMappedCache[i].tag.ToString());
-        //        //for (int j = 0; j < 16; j++)
-        //        //{
-        //        //    Console.Write('a'+i + "\t");
-        //        //}
-        //    }
-        //}
     }
 
+    //stores information about a row in the cache
     class SetAssociativeCacheRow
     {
         public CacheDataBlock[] rowElements
@@ -217,28 +175,33 @@ namespace SetAssociativeCache
             rowElements[1] = new CacheDataBlock();
         }
     }
+    //stores information about one entry in the set that makes up the row
     class CacheDataBlock
     {
-        public int tag
-        {
-            get;
-            set;
-        }
-        public bool vBit
-        {
-            get;
-            set;
-        }
-        public int LRUVal
-        {
-            get;
-            set;
-        }
+        public int tag;
+        public bool vBit;
+        public int LRUVal;
         public CacheDataBlock()
         {
             vBit = false;
             tag = 0;
             LRUVal = 0;
+        }
+    }
+    //stores information about the address
+    class Address
+    {
+        public int tag;
+        public int row;
+        public int offset;
+        public int value;
+
+        public Address(int address)
+        {
+            tag = address / 32;
+            row = (address / 4) % 8;
+            offset = address % 4;
+            value = address;
         }
     }
 }
